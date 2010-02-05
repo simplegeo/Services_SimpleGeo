@@ -90,7 +90,32 @@ class Services_SimpleGeo
             $lon . '.json');
     }
 
-//    public function get
+    /**
+     * Fetch a single record
+     *
+     * @var string $layer The layer the record belongs to
+     * @var string $id    The unique id of the record in the layer
+     *
+     * @return array
+     */
+    public function getRecord($layer, $id)
+    {
+        return $this->_sendRequest('/records/' . $layer . '/' . $id . '.json');
+    }
+
+    /**
+     * Fetch multiple records
+     *
+     * @var string $layer The layer the record belongs to
+     * @var arary  $ids   A list of unique id's of the records in the layer
+     *
+     * @return array
+     */
+    public function getRecord($layer, $ids)
+    {
+        return $this->_sendRequest('/records/' . $layer . '/' . 
+            implode(',', $ids) . '.json');
+    }
 
     /**
      * Send a request to the API
