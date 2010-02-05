@@ -1,12 +1,41 @@
 <?php
 
+/**
+ * Services_SimpleGeo
+ *
+ * Implementation of the OAuth specification
+ *
+ * PHP version 5.2.0+
+ *
+ * LICENSE: This source file is subject to the New BSD license that is
+ * available through the world-wide-web at the following URI:
+ * http://www.opensource.org/licenses/bsd-license.php. If you did not receive
+ * a copy of the New BSD License and are unable to obtain it through the web,
+ * please send a note to license@php.net so we can mail you a copy immediately.
+ *
+ * @category  Services
+ * @package   Services_SimpleGeo
+ * @author    Joe Stump <joe@joestump.net>
+ * @copyright 2010 Joe Stump <joe@joestump.net>
+ * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
+ * @link      http://pear.php.net/package/Services_SimpleGeo
+ * @link      http://github.com/simplegeo/Services_SimpleGeo
+ */
+
 require_once 'HTTP/OAuth/Consumer.php';
 require_once 'Services/SimpleGeo/Exception.php';
+require_once 'Services/SimpleGeo/Record.php';
 
 /**
- * A simple interface to SimpleGeo API
+ * Services_SimpleGeo
  *
- * @author Joe Stump <joe@simplegeo.com>
+ * @category  Services
+ * @package   Services_SimpleGeo
+ * @author    Joe Stump <joe@joestump.net>
+ * @copyright 2010 Joe Stump <joe@joestump.net>
+ * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
+ * @link      http://pear.php.net/package/Services_SimpleGeo
+ * @link      http://github.com/simplegeo/Services_SimpleGeo
  */
 class Services_SimpleGeo 
 {
@@ -57,13 +86,11 @@ class Services_SimpleGeo
      */
     public function getAddress($lat, $lon)
     {
-        try {
-            return $this->_sendRequest('/nearby/address/' . $lat . ',' . 
-                $lon . '.json');
-        } catch (HTTP_OAuth_Exception $e) {
-            throw new Services_SimpleGeo_Exception($e->getMessage());
-        }
+        return $this->_sendRequest('/nearby/address/' . $lat . ',' . 
+            $lon . '.json');
     }
+
+//    public function get
 
     /**
      * Send a request to the API
@@ -78,11 +105,21 @@ class Services_SimpleGeo
     private function _sendRequest($endpoint, $args = array(), $method = 'GET')
     {
         $url    = $this->api . '/' . $this->version . $endpoint;
-        $result = $this->oauth->sendRequest($url, $args, $method);
+
+        try {
+            $result = $this->oauth->sendRequest($url, $args, $method);
+        } catch (HTTP_OAuth_Exception $e) {
+            throw new Services_SimpleGeo_Exception($e->getMessage(),
+                $e->getCode());
+        }
+
         $body   = @json_decode($result->getBody());
         if (substr($result->getStatus(), 0, 1) == '2') {
             return $body;
         }
+
+        throw new Services_SimpleGeo_Exception($body['message'], 
+            $result->getStatus());
     }
 }
 
