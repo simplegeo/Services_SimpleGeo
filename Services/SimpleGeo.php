@@ -107,7 +107,7 @@ class Services_SimpleGeo
      * Fetch multiple records
      *
      * @var string $layer The layer the record belongs to
-     * @var arary  $ids   A list of unique id's of the records in the layer
+     * @var array  $ids   A list of unique id's of the records in the layer
      *
      * @return array
      */
@@ -115,6 +115,43 @@ class Services_SimpleGeo
     {
         return $this->_sendRequest('/records/' . $layer . '/' . 
             implode(',', $ids) . '.json');
+    }
+
+    /**
+     * Get location history of a record
+     *
+     * @var string $layer The layer the record belongs to
+     * @var string $id    The unique id of the record in the layer
+     * 
+     * @return array
+     */
+    public function getHistory($layer, $id, array $args = array())
+    {
+        return $this->_sendRequest('/records/' . $layer . '/' . $id . 
+            '/history.json', $args);
+    }
+
+    /**
+     * Get nearby points
+     *
+     * @var string $arg  Either 'lat,lon' or 'geohash'
+     * @var array  $args GET arguments for query
+     *
+     * @return array
+     */
+    public function getNearby($arg, array $args = array())
+    {
+        return $this->_sendRequest('/nearby/' . $arg . '.json', $args);
+    }
+
+    public function addRecord(Services_SimpleGeo_Record $rec)
+    {
+
+    }
+
+    public function addRecords(array $records)
+    {
+
     }
 
     /**
