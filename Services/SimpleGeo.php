@@ -22,7 +22,11 @@
  * @link      http://github.com/simplegeo/Services_SimpleGeo
  */
 
+require_once 'HTTP/OAuth.php';
 require_once 'HTTP/OAuth/Consumer.php';
+require_once 'HTTP/OAuth/Signature.php';
+require_once 'HTTP/Request2.php';
+require_once 'Net/URL2.php';
 require_once 'Services/SimpleGeo/Exception.php';
 require_once 'Services/SimpleGeo/Record.php';
 
@@ -62,6 +66,14 @@ class Services_SimpleGeo
     private $oauth = null;
 
     /**
+     */
+    private $token;
+
+    /**
+     */
+    private $secret;
+
+    /**
      * Constructor
      *
      * @var string $token  Your OAuth token
@@ -74,6 +86,8 @@ class Services_SimpleGeo
     {
         $this->oauth   = new HTTP_OAuth_Consumer($token, $secret);
         $this->version = $version;
+        $this->token   = $token;
+        $this->secret  = $secret;
     }
 
     /**
@@ -111,7 +125,7 @@ class Services_SimpleGeo
      *
      * @return array
      */
-    public function getRecord($layer, $ids)
+    public function getRecords($layer, $ids)
     {
         return $this->_sendRequest('/records/' . $layer . '/' . 
             implode(',', $ids) . '.json');
@@ -146,12 +160,62 @@ class Services_SimpleGeo
 
     public function addRecord(Services_SimpleGeo_Record $rec)
     {
+        $url = $this->_getURL('/records/' . $rec->layer . '/' . $rec->id . 
+            '.json');
 
+        $this->_PUT($url, (string)$rec);
     }
 
     public function addRecords(array $records)
     {
 
+    }
+
+    private function _PUT($url, $body)
+    {
+        $signatureMethod = $this->oauth->getSignatureMethod();
+        $params          = array(
+            'oauth_consumer_key'     => $this->oauth->getKey(),
+            'oauth_signature_method' => $signatureMethod,
+            'oauth_timestamp'        => time(),
+            'oauth_nonce'            => md5(microtime(true) . rand(1, 999)),
+            'oauth_version'          => '1.0'
+        ); 
+
+        $sig = HTTP_OAuth_Signature::factory($signatureMethod);
+        $params['oauth_siganture'] = $sig->build('PUT', $url, $params, 
+            $this->secret);
+
+        $req = new HTTP_Request2(new Net_URL2($url), HTTP_Request2::METHOD_PUT);//,
+//            array('adapter' => 'HTTP_Request2_Adapter_Curl'));
+
+        // Build the header
+        $header = 'OAuth realm="' . $this->api . '"';
+        foreach ($params as $name => $value) {
+            $header .= ", " . HTTP_OAuth::urlencode($name) . '="' .
+                HTTP_OAuth::urlencode($value) . '"';
+        }
+    
+        print $header . "\n";
+        print $body . "\n";
+ 
+        $req->setHeader('Authorization', $header);
+        $req->setBody($body);
+        try {
+            print "Sending .... \n";
+            $result = $req->send();
+            $body   = json_decode($result->getBody());
+            if ($result->getStatus() !== 202) {
+                throw new Services_SimpleGeo_Exception($body->message, 
+                    $result->getStatus());
+            }
+
+            print "--------------- RESULT -----------------\n";
+            print_r($body);
+            print "--------------- RESULT -----------------\n";
+        } catch(Exception $e) {
+            print $e . "\n";
+        }
     }
 
     /**
@@ -166,10 +230,9 @@ class Services_SimpleGeo
      */
     private function _sendRequest($endpoint, $args = array(), $method = 'GET')
     {
-        $url    = $this->api . '/' . $this->version . $endpoint;
-
         try {
-            $result = $this->oauth->sendRequest($url, $args, $method);
+            $result = $this->oauth->sendRequest($this->_getURL($endpoint), 
+                $args, $method);
         } catch (HTTP_OAuth_Exception $e) {
             throw new Services_SimpleGeo_Exception($e->getMessage(),
                 $e->getCode());
@@ -182,6 +245,11 @@ class Services_SimpleGeo
 
         throw new Services_SimpleGeo_Exception($body['message'], 
             $result->getStatus());
+    }
+
+    private function _getURL($endpoint)
+    {
+        return $this->api . '/' . $this->version . $endpoint;
     }
 }
 

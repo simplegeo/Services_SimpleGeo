@@ -55,8 +55,12 @@ class Services_SimpleGeo_Record
      * @var int    $created Unix timestamp of when the object was created
      */
     public function __construct($layer, $id, $lat, $lon, $type = 'object',
-        $created = time()) 
+        $created = null)
     {
+        if ($created === null) {
+            $created = time();
+        }
+
         $this->layer   = $layer;
         $this->id      = $id;
         $this->lat     = (float)$lat;
@@ -83,7 +87,7 @@ class Services_SimpleGeo_Record
      *
      * @return string
      */
-    public __toString() 
+    public function __toString() 
     {
         $ret = array(
             'type'     => 'Feature',
