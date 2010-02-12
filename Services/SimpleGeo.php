@@ -41,74 +41,82 @@ require_once 'Services/SimpleGeo/Record.php';
  * @link      http://pear.php.net/package/Services_SimpleGeo
  * @link      http://github.com/simplegeo/Services_SimpleGeo
  */
-class Services_SimpleGeo 
+class Services_SimpleGeo
 {
     /**
      * Version of the API to use
      *
-     * @var string $version The version of the API to use
+     * @var string $_version The version of the API to use
      */
-    private $version = '1.0';
+    private $_version = '0.1';
 
     /**
      * Base URI of the API
      *
-     * @var string $api The base URI for the SimpleGeo API
+     * @var string $_api The base URI for the SimpleGeo API
      */
-    private $api = 'http://api.simplegeo.com';
+    private $_api = 'http://api.simplegeo.com';
 
     /**
      * OAuth client
      *
-     * @var object $oauth Instance of OAuth client
+     * @var object $_oauth Instance of OAuth client
      * @see HTTP_OAuth_Consumer
      */
-    private $oauth = null;
+    private $_oauth = null;
 
     /**
+     * API token
+     *
+     * @var string $_token OAuth token
      */
-    private $token;
+    private $_token;
 
     /**
+     * API secret
+     *
+     * @var string $_secret OAuth secret
      */
-    private $secret;
+    private $_secret;
 
     /**
      * Constructor
      *
-     * @var string $token  Your OAuth token
-     * @var string $secret Your OAuth secret
+     * @param string $token   Your OAuth token
+     * @param string $secret  Your OAuth secret
+     * @param string $version Which version to use
      *
      * @return void
      * @see HTTP_OAuth_Consumer
      */
-    public function __construct($token, $secret, $version = '1.0')
+    public function __construct($token, $secret, $version = '0.1')
     {
-        $this->oauth   = new HTTP_OAuth_Consumer($token, $secret);
-        $this->version = $version;
-        $this->token   = $token;
-        $this->secret  = $secret;
+        $this->_oauth   = new HTTP_OAuth_Consumer($token, $secret);
+        $this->_version = $version;
+        $this->_token   = $token;
+        $this->_secret  = $secret;
     }
 
     /**
      * Reverse geocode a lat/lon to an address
      *
-     * @var float $lat Latitude
-     * @var float $lon Longitude
+     * @param float $lat Latitude
+     * @param float $lon Longitude
      *
      * @return mixed
      */
     public function getAddress($lat, $lon)
     {
-        return $this->_sendRequest('/nearby/address/' . $lat . ',' . 
-            $lon . '.json');
+        return $this->_sendRequest(
+            '/nearby/address/' . $lat . ',' . $lon . '.json'
+        );
     }
 
     /**
      * Fetch a single record
      *
-     * @var string $layer The layer the record belongs to
-     * @var string $id    The unique id of the record in the layer
+     * @param string $layer The layer the record belongs to
+     * @param string $id    The unique id of the record in the layer
      *
      * @return array
      */
@@ -120,36 +128,39 @@ class Services_SimpleGeo
     /**
      * Fetch multiple records
      *
-     * @var string $layer The layer the record belongs to
-     * @var array  $ids   A list of unique id's of the records in the layer
+     * @param string $layer The layer the record belongs to
+     * @param array  $ids   A list of unique id's of the records in the layer
      *
      * @return array
      */
     public function getRecords($layer, $ids)
     {
-        return $this->_sendRequest('/records/' . $layer . '/' . 
-            implode(',', $ids) . '.json');
+        return $this->_sendRequest(
+            '/records/' . $layer . '/' . implode(',', $ids) . '.json'
+        );
     }
 
     /**
      * Get location history of a record
      *
-     * @var string $layer The layer the record belongs to
-     * @var string $id    The unique id of the record in the layer
+     * @param string $layer The layer the record belongs to
+     * @param string $id    The unique id of the record in the layer
+     * @param array  $args  Extra arguments for call
      * 
      * @return array
      */
     public function getHistory($layer, $id, array $args = array())
     {
-        return $this->_sendRequest('/records/' . $layer . '/' . $id . 
-            '/history.json', $args);
+        return $this->_sendRequest(
+            '/records/' . $layer . '/' . $id . '/history.json', $args
+        );
     }
 
     /**
      * Get nearby points
      *
-     * @var string $arg  Either 'lat,lon' or 'geohash'
-     * @var array  $args GET arguments for query
+     * @param string $arg  Either 'lat,lon' or 'geohash'
+     * @param array  $args GET arguments for query
      *
      * @return array
      */
@@ -161,20 +172,29 @@ class Services_SimpleGeo
     /**
      * Add a record to a layer
      *
-     * @var object $rec An instance of {@link Services_SimpleGeo_Record}
+     * @param object $rec An instance of {@link Services_SimpleGeo_Record}
      *
      * @see Services_SimpleGeo_Record
      * @return boolean
      */
     public function addRecord(Services_SimpleGeo_Record $rec)
     {
-        $url = $this->_getURL('/records/' . $rec->layer . '/' . $rec->id . 
-            '.json');
-        $result = $this->_PUT($url, (string)$rec);
+        $url = $this->_getURL(
+            '/records/' . $rec->layer . '/' . $rec->id . '.json'
+        );
+
+        $result = $this->_put($url, (string)$rec);
         return ($result->getStatus() === 202);
     }
 
     /**
+     * Add multiple records in a single call
+     *
+     * @param array $records An array of {@link Services_SimpleGeo_Record}
+     *
+     * @see Services_SimpleGeo::addRecord()
+     * @see Services_SimpleGeo_Record
+     * @return boolean
      */
     public function addRecords(array $records)
     {
@@ -184,29 +204,30 @@ class Services_SimpleGeo
     /**
      * Send an OAuth signed PUT request to the API
      *
-     * @var string $url  The URL to send the PUT to
-     * @var string $body The raw body to PUT to the URL
+     * @param string $url  The URL to send the PUT to
+     * @param string $body The raw body to PUT to the URL
      *
      * @return object Instance of {@link HTTP_Request2_Response}
      * @see http://bit.ly/cdZGfr
      */
-    private function _PUT($url, $body)
+    private function _put($url, $body)
     {
-        $signatureMethod = $this->oauth->getSignatureMethod();
+        $signatureMethod = $this->_oauth->getSignatureMethod();
         $params          = array(
             'oauth_nonce'            => (string)rand(0, 100000000),
             'oauth_timestamp'        => time(),
-            'oauth_consumer_key'     => $this->oauth->getKey(),
+            'oauth_consumer_key'     => $this->_oauth->getKey(),
             'oauth_signature_method' => $signatureMethod,
             'oauth_version'          => '1.0'
         ); 
 
         $sig = HTTP_OAuth_Signature::factory($signatureMethod);
-        $params['oauth_signature'] = $sig->build('PUT', $url, $params, 
-            $this->secret);
+        $params['oauth_signature'] = $sig->build(
+            'PUT', $url, $params, $this->_secret
+        );
 
         // Build the header
-        $header = 'OAuth realm="' . $this->api . '"';
+        $header = 'OAuth realm="' . $this->_api . '"';
         foreach ($params as $name => $value) {
             $header .= ", " . HTTP_OAuth::urlencode($name) . '="' .
                 HTTP_OAuth::urlencode($value) . '"';
@@ -236,9 +257,9 @@ class Services_SimpleGeo
     /**
      * Send a request to the API
      *
-     * @var string $endpoint Relative path to endpoint
-     * @var array  $args     Additional arguments passed to HTTP_OAuth
-     * @var string $method   HTTP method to use
+     * @param string $endpoint Relative path to endpoint
+     * @param array  $args     Additional arguments passed to HTTP_OAuth
+     * @param string $method   HTTP method to use
      * 
      * @return mixed
      * @see HTTP_OAuth_Consumer::sendRequest()
@@ -246,8 +267,9 @@ class Services_SimpleGeo
     private function _sendRequest($endpoint, $args = array(), $method = 'GET')
     {
         try {
-            $result = $this->oauth->sendRequest($this->_getURL($endpoint), 
-                $args, $method);
+            $result = $this->_oauth->sendRequest(
+                $this->_getURL($endpoint), $args, $method
+            );
         } catch (HTTP_OAuth_Exception $e) {
             throw new Services_SimpleGeo_Exception($e->getMessage(),
                 $e->getCode());
@@ -262,9 +284,17 @@ class Services_SimpleGeo
             $result->getStatus());
     }
 
+    /**
+     * Construct an API URL
+     *
+     * @param string $endpoint The relative path for the endpoint
+     *
+     * @return string
+     * @see Services_SimpleGeo::$_api, Services_SimpleGeo::$_version
+     */
     private function _getURL($endpoint)
     {
-        return $this->api . '/' . $this->version . $endpoint;
+        return $this->_api . '/' . $this->_version . $endpoint;
     }
 }
 
