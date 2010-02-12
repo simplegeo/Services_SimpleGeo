@@ -158,36 +158,52 @@ class Services_SimpleGeo
         return $this->_sendRequest('/nearby/' . $arg . '.json', $args);
     }
 
+    /**
+     * Add a record to a layer
+     *
+     * @var object $rec An instance of {@link Services_SimpleGeo_Record}
+     *
+     * @see Services_SimpleGeo_Record
+     * @return boolean
+     */
     public function addRecord(Services_SimpleGeo_Record $rec)
     {
         $url = $this->_getURL('/records/' . $rec->layer . '/' . $rec->id . 
             '.json');
-
-        $this->_PUT($url, (string)$rec);
+        $result = $this->_PUT($url, (string)$rec);
+        return ($result->getStatus() === 202);
     }
 
+    /**
+     */
     public function addRecords(array $records)
     {
 
     }
 
+    /**
+     * Send an OAuth signed PUT request to the API
+     *
+     * @var string $url  The URL to send the PUT to
+     * @var string $body The raw body to PUT to the URL
+     *
+     * @return object Instance of {@link HTTP_Request2_Response}
+     * @see http://bit.ly/cdZGfr
+     */
     private function _PUT($url, $body)
     {
         $signatureMethod = $this->oauth->getSignatureMethod();
         $params          = array(
+            'oauth_nonce'            => (string)rand(0, 100000000),
+            'oauth_timestamp'        => time(),
             'oauth_consumer_key'     => $this->oauth->getKey(),
             'oauth_signature_method' => $signatureMethod,
-            'oauth_timestamp'        => time(),
-            'oauth_nonce'            => md5(microtime(true) . rand(1, 999)),
             'oauth_version'          => '1.0'
         ); 
 
         $sig = HTTP_OAuth_Signature::factory($signatureMethod);
-        $params['oauth_siganture'] = $sig->build('PUT', $url, $params, 
+        $params['oauth_signature'] = $sig->build('PUT', $url, $params, 
             $this->secret);
-
-        $req = new HTTP_Request2(new Net_URL2($url), HTTP_Request2::METHOD_PUT);//,
-//            array('adapter' => 'HTTP_Request2_Adapter_Curl'));
 
         // Build the header
         $header = 'OAuth realm="' . $this->api . '"';
@@ -195,27 +211,26 @@ class Services_SimpleGeo
             $header .= ", " . HTTP_OAuth::urlencode($name) . '="' .
                 HTTP_OAuth::urlencode($value) . '"';
         }
-    
-        print $header . "\n";
-        print $body . "\n";
- 
+
+        $req = new HTTP_Request2(new Net_URL2($url), HTTP_Request2::METHOD_PUT);
         $req->setHeader('Authorization', $header);
         $req->setBody($body);
-        try {
-            print "Sending .... \n";
-            $result = $req->send();
-            $body   = json_decode($result->getBody());
-            if ($result->getStatus() !== 202) {
-                throw new Services_SimpleGeo_Exception($body->message, 
-                    $result->getStatus());
-            }
 
-            print "--------------- RESULT -----------------\n";
-            print_r($body);
-            print "--------------- RESULT -----------------\n";
-        } catch(Exception $e) {
-            print $e . "\n";
+        try {
+            $result = $req->send();
+        } catch (Exception $e) {
+            throw new Services_SimpleGeo_Exception($e->getMessage(), 
+                $e->getCode());
         }
+
+        $check = (int)substr($result->getStatus(), 0, 1);
+        if ($check !== 2) {
+            $body = @json_decode($result->getBody());
+            throw new Services_SimpleGeo_Exception($body->message, 
+                $result->getStatus());
+        }
+
+        return $result;
     }
 
     /**
