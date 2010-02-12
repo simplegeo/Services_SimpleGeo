@@ -35,28 +35,76 @@
  */
 class Services_SimpleGeo_Record
 {
+    /**
+     * Layer 
+     *
+     * @var string $layer Layer name (e.g. com.simplegeo.foobar)
+     */
     public $layer;
+
+    /**
+     * Unique ID in layer
+     *
+     * @var string $id The unique ID for the record in the layer
+     */
     public $id;
+
+    /**
+     * Latitude
+     *
+     * @var float $lat The latitude of the object
+     */
     public $lat;
+
+    /**
+     * Longitude 
+     *
+     * @var float $lat The longitude of the object
+     */
     public $lon;
+
+    /**
+     * Type of object
+     *
+     * Must be one of: person, place, object, audio, text, video or photo. You
+     * can query by object type as filter.
+     * 
+     * @var string $type The type of the object
+     */
     public $type = 'object';
+
+    /**
+     * Timestamp of when record was created
+     *
+     * Defaults to the current Unix timestamp for the server that you're 
+     * sending the requests from.
+     * 
+     * @var string $created Unix timestamp
+     */
     public $created = 0;
-    private $properties = array();
+
+    /**
+     * Arbitrary properties
+     *
+     * @var array $_properties Array of arbitrary properties
+     */
+    private $_properties = array();
 
     /**
      * Constructor
      *
-     * @var string $layer   Name of layer
-     * @var string $id      Unique identifier of record within the layer
-     * @var float  $lat     Latitude of point
-     * @var float  $lon     Longitude of point
-     * @var string $type    Type of record (person, place, object, audio, text,
-     *                      video or photo)
+     * @param string  $layer   Name of layer
+     * @param string  $id      Unique identifier of record within the layer
+     * @param float   $lat     Latitude of point
+     * @param float   $lon     Longitude of point
+     * @param string  $type    Type of record 
+     * @param integer $created Timestamp of when record was created
+     *
      * @var int    $created Unix timestamp of when the object was created
      */
-    public function __construct($layer, $id, $lat, $lon, $type = 'object',
-        $created = null)
-    {
+    public function __construct(
+        $layer, $id, $lat, $lon, $type = 'object', $created = null
+    ) {
         if ($created === null) {
             $created = time();
         }
@@ -72,14 +120,14 @@ class Services_SimpleGeo_Record
     /**
      * Set a record property
      *
-     * @var string $var Property name to set
-     * @var mixed  $val Property value
+     * @param string $var Property name to set
+     * @param mixed  $val Property value
      *
      * @return void
      */
     public function __set($var, $val) 
     {
-        $this->properties[$var] = $val;
+        $this->_properties[$var] = $val;
     }
 
     /**
@@ -97,7 +145,7 @@ class Services_SimpleGeo_Record
                 'type'        => 'Point',
                 'coordinates' => array($this->lon, $this->lat)
             ),
-            'properties' => $this->properties
+            'properties' => $this->_properties
         );
 
 
