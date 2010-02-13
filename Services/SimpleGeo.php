@@ -242,8 +242,9 @@ class Services_SimpleGeo
     /**
      * Send an OAuth signed request with a body to the API
      *
-     * @param string $url  The URL to send the request to
-     * @param string $body The raw body to PUT/POST to the URL
+     * @param string $url    The URL to send the request to
+     * @param string $body   The raw body to PUT/POST to the URL
+     * @param string $method The HTTP method to use (POST or PUT)
      *
      * @return object Instance of {@link HTTP_Request2_Response}
      * @see http://bit.ly/cdZGfr
