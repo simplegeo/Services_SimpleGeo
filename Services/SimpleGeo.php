@@ -188,6 +188,23 @@ class Services_SimpleGeo
     }
 
     /**
+     * Delete a record from the API
+     *
+     * @param string $layer The layer the record belongs to
+     * @param string $id    The unique id of the record in the layer
+     *
+     * @return boolean Returns true on success
+     */
+    public function deleteRecord($layer, $id)
+    {
+        $result = $this->_sendRequest(
+            '/records/' . $layer . '/' . $id . '.json', array(), 'DELETE'
+        );
+
+        return ($result === null);
+    }
+
+    /**
      * Add multiple records in a single call
      *
      * @param stirng $layer   The layer to POST the records to
@@ -314,7 +331,7 @@ class Services_SimpleGeo
             return $body;
         }
 
-        throw new Services_SimpleGeo_Exception($body['message'], 
+        throw new Services_SimpleGeo_Exception($body->message, 
             $result->getStatus());
     }
 
