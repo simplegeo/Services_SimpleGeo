@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.4.2" 
+         version="2.0" 
+         xmlns="http://pear.php.net/dtd/package-2.0" 
+         xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+                             http://pear.php.net/dtd/tasks-1.0.xsd
+                             http://pear.php.net/dtd/package-2.0
+                             http://pear.php.net/dtd/package-2.0.xsd">
+    <name>Services_SimpleGeo</name>
+    <channel>pear.php.net</channel>
+    <summary>PHP5 interface for using SimpleGeo's API</summary>
+    <description>SimpleGeo offers location-based services for developers. It offers the ability to store, query, and manage location data.</description>
+    <lead>
+        <name>Joe Stump</name>
+        <user>jstump</user>
+        <email>joe@simplegeo.com</email>
+        <active>yes</active>
+    </lead>
+    <date>2010-02-13</date>
+    <version>
+        <release>0.0.1</release>
+        <api>0.0.1</api>
+    </version>
+    <stability>
+        <release>alpha</release>
+        <api>alpha</api>
+    </stability>
+    <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+    <notes><![CDATA[
+        * Initial release
+    ]]></notes>
+    <contents>
+        <dir name="/">
+            <dir name="Services">
+                <file name="SimpleGeo.php"
+                      role="php" />
+                <dir name="SimpleGeo">
+                    <file name="Exception.php"
+                          role="php" />
+                    <file name="Record.php"
+                          role="php" />
+                </dir>
+            </dir>
+        </dir>
+    </contents>
+    <dependencies>
+        <required>
+            <php>
+                <min>5.1.0</min>
+            </php>
+            <pearinstaller>
+                <min>1.4.0b1</min>
+            </pearinstaller>
+            <package>
+                <name>HTTP_Request2</name>
+                <channel>pear.php.net</channel>
+                <min>0.3.0</min>
+            </package>
+            <package>
+                <name>Net_URL2</name>
+                <channel>pear.php.net</channel>
+                <min>0.2.0</min>
+            </package>
+            <package>
+                <name>HTTP_OAuth</name>
+                <channel>pear.php.net</channel>
+                <min>0.1.7</min>
+            </package>
+        </required>
+    </dependencies>
+    <phprelease />
+    <changelog>
+    </changelog>
+</package>

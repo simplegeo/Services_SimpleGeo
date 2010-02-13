@@ -1,1 +1,17 @@
-A PEAR client for SimpleGeo (http://simplegeo.com).
+## Install
+
+You can either install `Services_SimpleGeo` via the normal PEAR packaging and
+installation process or you can simply copy the necessary files into your PHP
+project. Please not the requirements if you do the latter.
+
+* `git clone git://github.com/simplegeo/Services_SimpleGeo.git`
+* `cd Services_SimpleGeo`
+* `pear package`
+* `pear install Services_SimpleGeo-x.y.z.tgz`
+
+## Requirements 
+
+* [HTTP_Request2 0.3.0+](http://pear.php.net/package/HTTP_Request2)
+* [HTTP_OAuth 0.1.7+](http://pear.php.net/package/HTTP_OAuth)
+* [Net_URL2 0.2.0+](http://pear.php.net/package/Net_URL2)
+
