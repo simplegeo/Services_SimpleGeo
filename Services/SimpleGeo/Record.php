@@ -137,7 +137,18 @@ class Services_SimpleGeo_Record
      */
     public function __toString() 
     {
-        $ret = array(
+        return json_encode($this->toArray());
+    }
+
+    /**
+     * Return the record as a plain array
+     *
+     * @see Services_SimpleGeo_Record::__toString()
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
             'type'     => 'Feature',
             'id'       => $this->id,
             'created'  => $this->created,
@@ -147,9 +158,6 @@ class Services_SimpleGeo_Record
             ),
             'properties' => $this->_properties
         );
-
-
-        return json_encode($ret);
     }
 }
 

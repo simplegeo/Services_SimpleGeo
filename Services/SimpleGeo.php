@@ -183,35 +183,69 @@ class Services_SimpleGeo
             '/records/' . $rec->layer . '/' . $rec->id . '.json'
         );
 
-        $result = $this->_put($url, (string)$rec);
+        $result = $this->_sendRequestWithBody($url, (string)$rec);
         return ($result->getStatus() === 202);
     }
 
     /**
      * Add multiple records in a single call
      *
-     * @param array $records An array of {@link Services_SimpleGeo_Record}
+     * @param stirng $layer   The layer to POST the records to
+     * @param array  $records An array of {@link Services_SimpleGeo_Record}
      *
      * @see Services_SimpleGeo::addRecord()
      * @see Services_SimpleGeo_Record
      * @return boolean
      */
-    public function addRecords(array $records)
+    public function addRecords($layer, array $records)
     {
+        $body = array(
+            'type' => 'FeatureCollection',
+            'features' => array()
+        );
 
+        foreach ($records as $rec) {
+            if (!$rec instanceof Services_SimpleGeo_Record) {
+                throw new Services_SimpleGeo_Exception(
+                    'Records must be instances of Services_SimpleGeo_Record'
+                );
+            }
+
+            $body['features'][] = $rec->toArray();
+        }
+
+        $result = $this->_sendRequestWithBody(
+            $this->_getURL('/records/' . $layer . '.json'), 
+            json_encode($body), "POST"
+        );
+
+        return ($result->getStatus() === 202);
     }
 
     /**
-     * Send an OAuth signed PUT request to the API
+     * Send an OAuth signed request with a body to the API
      *
-     * @param string $url  The URL to send the PUT to
-     * @param string $body The raw body to PUT to the URL
+     * @param string $url  The URL to send the request to
+     * @param string $body The raw body to PUT/POST to the URL
      *
      * @return object Instance of {@link HTTP_Request2_Response}
      * @see http://bit.ly/cdZGfr
      */
-    private function _put($url, $body)
+    private function _sendRequestWithBody($url, $body, $method="PUT")
     {
+        static $map = array(
+            'PUT'  => HTTP_Request2::METHOD_PUT,
+            'POST' => HTTP_Request2::METHOD_POST
+        );
+
+        if (array_key_exists($method, $map)) {
+            $method = $map[$method];
+        } else {
+            throw new Services_SimpleGeo_Exception(
+                'Invalid HTTP method ' . $method
+            );
+        }
+
         $signatureMethod = $this->_oauth->getSignatureMethod();
         $params          = array(
             'oauth_nonce'            => (string)rand(0, 100000000),
@@ -223,7 +257,7 @@ class Services_SimpleGeo
 
         $sig = HTTP_OAuth_Signature::factory($signatureMethod);
         $params['oauth_signature'] = $sig->build(
-            'PUT', $url, $params, $this->_secret
+            $method, $url, $params, $this->_secret
         );
 
         // Build the header
@@ -233,7 +267,7 @@ class Services_SimpleGeo
                 HTTP_OAuth::urlencode($value) . '"';
         }
 
-        $req = new HTTP_Request2(new Net_URL2($url), HTTP_Request2::METHOD_PUT);
+        $req = new HTTP_Request2(new Net_URL2($url), $method);
         $req->setHeader('Authorization', $header);
         $req->setBody($body);
 
