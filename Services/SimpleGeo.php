@@ -159,14 +159,15 @@ class Services_SimpleGeo
     /**
      * Get nearby points
      *
+     * @param string $layer The layer the record belongs to
      * @param string $arg  Either 'lat,lon' or 'geohash'
      * @param array  $args GET arguments for query
      *
      * @return array
      */
-    public function getNearby($arg, array $args = array())
+    public function getNearby($layer, $arg, array $args = array())
     {
-        return $this->_sendRequest('/nearby/' . $arg . '.json', $args);
+        return $this->_sendRequest('/records/' . $layer . '/nearby/' . $arg . '.json', $args);
     }
 
     /**
