@@ -20,8 +20,8 @@
     </lead>
     <date>2010-02-13</date>
     <version>
-        <release>0.0.1</release>
-        <api>0.0.1</api>
+        <release>0.0.2</release>
+        <api>0.0.2</api>
     </version>
     <stability>
         <release>alpha</release>
@@ -72,5 +72,32 @@
     </dependencies>
     <phprelease />
     <changelog>
+        <date>2010-02-13</date>
+        <version>
+            <release>0.0.1</release>
+            <api>0.0.1</api>
+        </version>
+        <stability>
+            <release>alpha</release>
+            <api>alpha</api>
+        </stability>
+        <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+        <notes><![CDATA[
+            * Initial release
+        ]]></notes>
+        <contents>
+            <dir name="/">
+                <dir name="Services">
+                    <file name="SimpleGeo.php"
+                          role="php" />
+                    <dir name="SimpleGeo">
+                        <file name="Exception.php"
+                              role="php" />
+                        <file name="Record.php"
+                              role="php" />
+                    </dir>
+                </dir>
+            </dir>
+        </contents>
     </changelog>
 </package>
