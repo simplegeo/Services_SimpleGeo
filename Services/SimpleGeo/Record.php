@@ -137,7 +137,12 @@ class Services_SimpleGeo_Record
      */
     public function __toString() 
     {
-        return json_encode($this->toArray());
+        $array = $this->toArray();
+        if(!$array['properties']) {
+            /* Make sure empty properties encode to an empty object. */
+            $array['properties'] = new stdClass;
+        }
+        return json_encode($array);
     }
 
     /**
