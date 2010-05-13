@@ -2,7 +2,7 @@
 
 You can either install `Services_SimpleGeo` via the normal [PEAR](http://pear.php.net) packaging and
 installation process or you can simply copy the necessary files into your PHP
-project. Please not the requirements if you do the latter.
+project. Please note the requirements if you do the latter.
 
 * `git clone git://github.com/simplegeo/Services_SimpleGeo.git`
 * `cd Services_SimpleGeo`
