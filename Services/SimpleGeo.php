@@ -250,6 +250,27 @@ class Services_SimpleGeo
     }
 
     /**
+     * Get containing polygons for a given point
+     *
+     * Does a "pushpin" query through a series of polygon layers
+     * and identifies the "cone" of administrative and other 
+     * boundaries in which the point lies. See README for list
+     * of returned feature types.
+     *
+     * @param float  $lat  The latitude of the point
+     * @param float  $lon  The longitude of the point
+     *
+     * @return array
+     */
+    public function getContains($lat, $lon) {
+
+        return $this->_sendRequest(
+            '/contains/' . $lat . ',' . $lon . '.json'
+        );
+
+    }
+
+    /**
      * Get the density of a given point
      *
      * If you do not provide a $day then the current day will be
