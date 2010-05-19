@@ -271,7 +271,7 @@ class Services_SimpleGeo
     }
 
     /**
-     * Get overlapping polygons for a given bounding box
+     * Get containing polygons for a given point
      *
      * Queries a series of polygon layers and identifies the "cone"
      * of administrative and other boundaries that overlap with the 
@@ -290,6 +290,27 @@ class Services_SimpleGeo
 
         return $this->_sendRequest(
             '/overlaps/' . $south . ',' . $west . ',' . $north . ',' . $east . '.json'
+        );
+
+    }
+
+    /**
+     * Returns a feature object, along with the geometry of the 
+     * feature in GeoJSON format in the geometry field.
+     *
+     * The format for the id parameter should be:
+     * <type>:<name>:<geohash>
+     * 
+     * Example: Province:Bauchi:s1zj73
+     *
+     * @param string  $id  A unique ID as described above
+     *
+     * @return array
+     */
+    public function getBoundary($id) {
+
+        return $this->_sendRequest(
+            '/boundary/' . $id . '.json'
         );
 
     }
