@@ -271,6 +271,30 @@ class Services_SimpleGeo
     }
 
     /**
+     * Get overlapping polygons for a given bounding box
+     *
+     * Queries a series of polygon layers and identifies the "cone"
+     * of administrative and other boundaries that overlap with the 
+     * given bounding box. The arguments are expected as single units 
+     * of latitude and longitude. The results are returned in the same 
+     * form as the contains query.
+     *
+     * @param float  $south  A southern most lattitude
+     * @param float  $west  A western most longitude
+     * @param float  $north  A northern most lattitude
+     * @param float  $east  An eastern most longitude
+     *
+     * @return array
+     */
+    public function getOverlaps($south, $west, $north, $east) {
+
+        return $this->_sendRequest(
+            '/overlaps/' . $south . ',' . $west . ',' . $north . ',' . $east . '.json'
+        );
+
+    }
+
+    /**
      * Get the density of a given point
      *
      * If you do not provide a $day then the current day will be
