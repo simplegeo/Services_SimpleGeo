@@ -169,7 +169,7 @@ class Services_SimpleGeo
      * Get nearby points
      *
      * @param string $layer The layer the record belongs to
-     * @param string $arg  Either 'lat,lon' or 'geohash'
+     * @param string $arg  Either 'lat,lon', 'geohash', or 'IP address'
      * @param array  $args GET arguments for query
      *
      * @return array
