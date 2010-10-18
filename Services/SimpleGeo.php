@@ -316,6 +316,21 @@ class Services_SimpleGeo
     }
 
     /**
+     * Returns a latitude and longitude from an IP address.
+     *
+     * @param string  $ip  An IP address. For example: 137.38.110.60
+     *
+     * @return array
+     */
+    public function getLocationFromIP($ip) {
+
+        return $this->_sendRequest(
+            '/locate/' . $ip . '.json'
+        );
+
+    }
+
+    /**
      * Get the density of a given point
      *
      * If you do not provide a $day then the current day will be
