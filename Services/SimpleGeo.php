@@ -331,6 +331,23 @@ class Services_SimpleGeo
     }
 
     /**
+     * Get containing polygons for a given IP address
+     *
+     * Does a "pushpin" query with an IP address. See getContains()
+     *
+     * @param string  $ip  An IP address. For example: 137.38.110.60
+     *
+     * @return array
+     */
+    public function getContainsFromIP($ip) {
+
+        return $this->_sendRequest(
+            '/contains/' . $ip . '.json'
+        );
+
+    }
+
+    /**
      * Get the density of a given point
      *
      * If you do not provide a $day then the current day will be
