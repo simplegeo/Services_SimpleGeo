@@ -249,71 +249,6 @@ class Services_SimpleGeo
         return ($result->getStatus() === 202);
     }
 
-    /**
-     * Get containing polygons for a given point
-     *
-     * Does a "pushpin" query through a series of polygon layers
-     * and identifies the "cone" of administrative and other 
-     * boundaries in which the point lies. See README for list
-     * of returned feature types.
-     *
-     * @param float  $lat  The latitude of the point
-     * @param float  $lon  The longitude of the point
-     *
-     * @return array
-     */
-    public function getContains($lat, $lon) {
-
-        return $this->_sendRequest(
-            '/contains/' . $lat . ',' . $lon . '.json'
-        );
-
-    }
-
-    /**
-     * Get containing polygons for a given point
-     *
-     * Queries a series of polygon layers and identifies the "cone"
-     * of administrative and other boundaries that overlap with the 
-     * given bounding box. The arguments are expected as single units 
-     * of latitude and longitude. The results are returned in the same 
-     * form as the contains query.
-     *
-     * @param float  $south  A southern most lattitude
-     * @param float  $west  A western most longitude
-     * @param float  $north  A northern most lattitude
-     * @param float  $east  An eastern most longitude
-     *
-     * @return array
-     */
-    public function getOverlaps($south, $west, $north, $east) {
-
-        return $this->_sendRequest(
-            '/overlaps/' . $south . ',' . $west . ',' . $north . ',' . $east . '.json'
-        );
-
-    }
-
-    /**
-     * Returns a feature object, along with the geometry of the 
-     * feature in GeoJSON format in the geometry field.
-     *
-     * The format for the id parameter should be:
-     * <type>:<name>:<geohash>
-     * 
-     * Example: Province:Bauchi:s1zj73
-     *
-     * @param string  $id  A unique ID as described above
-     *
-     * @return array
-     */
-    public function getBoundary($id) {
-
-        return $this->_sendRequest(
-            '/boundary/' . $id . '.json'
-        );
-
-    }
 
     /**
      * Returns a latitude and longitude from an IP address.
@@ -330,22 +265,6 @@ class Services_SimpleGeo
 
     }
 
-    /**
-     * Get containing polygons for a given IP address
-     *
-     * Does a "pushpin" query with an IP address. See getContains()
-     *
-     * @param string  $ip  An IP address. For example: 137.38.110.60
-     *
-     * @return array
-     */
-    public function getContainsFromIP($ip) {
-
-        return $this->_sendRequest(
-            '/contains/' . $ip . '.json'
-        );
-
-    }
 
     /**
      * Get the density of a given point
