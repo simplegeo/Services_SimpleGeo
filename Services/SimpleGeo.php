@@ -254,6 +254,22 @@ class Services_SimpleGeo
         return ($result->getStatus() === 202);
     }
 
+    /**
+     * Do a SimpleGeo Context query
+     *
+     * @param float $lat Latitude
+     * @param float $lon Longitude
+     *
+     * @return mixed
+     */
+    public function getContext($lat, $lon)
+    {
+        $version = '1.0';
+        $result = $this->_sendRequest(
+            $version . '/context/' . $lat . ',' . $lon . '.json'
+        );
+    }
+
 
     /**
      * Get the density of a given point
