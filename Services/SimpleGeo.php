@@ -244,9 +244,10 @@ class Services_SimpleGeo
         }
 
         $version = '0.1';
+        $endpoint = '/records/' . $layer . '.json';
 
         $result = $this->_sendRequestWithBody(
-            $this->_getURL($version . '/records/' . $layer . '.json'), 
+            $this->_getURL($endpoint, $version), 
             json_encode($body), "POST"
         );
 
