@@ -286,6 +286,21 @@ class Services_SimpleGeo
         );
     }
 
+    /**
+     * Return information about a SimpleGeo feature
+     *
+     * @param string $handle A SimpleGeo handle
+     *
+     * @return mixed
+     */
+    public function getFeature($handle)
+    {
+        $version = '1.0';
+        return $this->_sendRequest(
+            $version . '/features/' . $handle . '.json'
+        );
+    }
+
 
     /**
      * Get the density of a given point
