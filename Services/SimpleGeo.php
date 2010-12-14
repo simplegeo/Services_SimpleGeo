@@ -57,13 +57,6 @@ class Services_SimpleGeo
      *
      * @var string $_version The version of the API to use
      */
-    private $_version = '0.1';
-
-    /**
-     * Base URI of the API
-     *
-     * @var string $_api The base URI for the SimpleGeo API
-     */
     private $_api = 'http://api.simplegeo.com';
 
     /**
@@ -131,7 +124,10 @@ class Services_SimpleGeo
      */
     public function getRecord($layer, $id)
     {
-        return $this->_sendRequest('/records/' . $layer . '/' . $id . '.json');
+        $version = '0.1';
+        return $this->_sendRequest(
+            $version . '/records/' . $layer . '/' . $id . '.json'
+        );
     }
 
     /**
@@ -144,8 +140,9 @@ class Services_SimpleGeo
      */
     public function getRecords($layer, $ids)
     {
+        $version = '0.1';
         return $this->_sendRequest(
-            '/records/' . $layer . '/' . implode(',', $ids) . '.json'
+            $version . '/records/' . $layer . '/' . implode(',', $ids) . '.json'
         );
     }
 
@@ -160,8 +157,9 @@ class Services_SimpleGeo
      */
     public function getHistory($layer, $id, array $args = array())
     {
+        $version = '0.1';
         return $this->_sendRequest(
-            '/records/' . $layer . '/' . $id . '/history.json', $args
+            $version . '/records/' . $layer . '/' . $id . '/history.json', $args
         );
     }
 
@@ -176,7 +174,10 @@ class Services_SimpleGeo
      */
     public function getNearby($layer, $arg, array $args = array())
     {
-        return $this->_sendRequest('/records/' . $layer . '/nearby/' . $arg . '.json', $args);
+        $version = '0.1';
+        return $this->_sendRequest(
+            $version . '/records/' . $layer . '/nearby/' . $arg . '.json', $args
+        );
     }
 
     /**
@@ -189,12 +190,13 @@ class Services_SimpleGeo
      */
     public function addRecord(Services_SimpleGeo_Record $rec)
     {
-        $url = $this->_getURL(
-            '/records/' . $rec->layer . '/' . $rec->id . '.json'
-        );
+        $endpoint = '/records/' . $rec->layer . '/' . $rec->id . '.json';
+        $version = '0.1';
+        $url = $this->_getURL($endpoint, $version);
+        print $url
 
-        $result = $this->_sendRequestWithBody($url, (string)$rec);
-        return ($result->getStatus() === 202);
+//        $result = $this->_sendRequestWithBody($url, (string)$rec);
+//        return ($result->getStatus() === 202);
     }
 
     /**
@@ -207,8 +209,9 @@ class Services_SimpleGeo
      */
     public function deleteRecord($layer, $id)
     {
+        $version = '0.1';
         $result = $this->_sendRequest(
-            '/records/' . $layer . '/' . $id . '.json', array(), 'DELETE'
+            $version . '/records/' . $layer . '/' . $id . '.json', array(), 'DELETE'
         );
 
         return ($result === null);
@@ -251,22 +254,6 @@ class Services_SimpleGeo
 
 
     /**
-     * Returns a latitude and longitude from an IP address.
-     *
-     * @param string  $ip  An IP address. For example: 137.38.110.60
-     *
-     * @return array
-     */
-    public function getLocationFromIP($ip) {
-
-        return $this->_sendRequest(
-            '/locate/' . $ip . '.json'
-        );
-
-    }
-
-
-    /**
      * Get the density of a given point
      *
      * If you do not provide a $day then the current day will be
@@ -290,9 +277,11 @@ class Services_SimpleGeo
                 $day . ' is not a valid day of the week (e.g. mon).'
             );
         }
+        
+        $version = '0.1';
 
         if ($hour === null) {
-            $endpoint = '/density/' . $day . '/' . $lat . ',' . $lon . '.json';
+            $endpoint = $version . '/density/' . $day . '/' . $lat . ',' . $lon . '.json';
         } else {
             if ($hour < 0 || $hour > 23) {
                 throw new Services_SimpleGeo_Exception(
@@ -300,7 +289,7 @@ class Services_SimpleGeo
                 );
             }
 
-            $endpoint = '/density/' . $day . '/' . $hour . '/' . $lat . ',' .
+            $endpoint = $version . '/density/' . $day . '/' . $hour . '/' . $lat . ',' .
                 $lon . '.json';
         }
 
