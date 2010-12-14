@@ -265,7 +265,7 @@ class Services_SimpleGeo
     public function getContext($lat, $lon)
     {
         $version = '1.0';
-        $result = $this->_sendRequest(
+        return $this->_sendRequest(
             $version . '/context/' . $lat . ',' . $lon . '.json'
         );
     }
