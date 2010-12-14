@@ -98,10 +98,9 @@ class Services_SimpleGeo
      * @return void
      * @see HTTP_OAuth_Consumer
      */
-    public function __construct($token, $secret, $version = '0.1')
+    public function __construct($token, $secret)
     {
         $this->_oauth   = new HTTP_OAuth_Consumer($token, $secret);
-        $this->_version = $version;
         $this->_token   = $token;
         $this->_secret  = $secret;
     }
@@ -116,8 +115,9 @@ class Services_SimpleGeo
      */
     public function getAddress($lat, $lon)
     {
+        $version = '0.1';
         return $this->_sendRequest(
-            '/nearby/address/' . $lat . ',' . $lon . '.json'
+            $version . '/nearby/address/' . $lat . ',' . $lon . '.json'
         );
     }
 
@@ -412,9 +412,9 @@ class Services_SimpleGeo
      * @return string
      * @see Services_SimpleGeo::$_api, Services_SimpleGeo::$_version
      */
-    private function _getURL($endpoint)
+    private function _getURL($endpoint, $version)
     {
-        return $this->_api . '/' . $this->_version . $endpoint;
+        return $this->_api . '/' . $version . $endpoint;
     }
 }
 
