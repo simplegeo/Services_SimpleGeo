@@ -270,6 +270,22 @@ class Services_SimpleGeo
         );
     }
 
+    /**
+     * Do a nearby search for SimpleGeo Places
+     *
+     * @param float $lat Latitude
+     * @param float $lon Longitude
+     *
+     * @return mixed
+     */
+    public function getPlaces($lat, $lon)
+    {
+        $version = '1.0';
+        return $this->_sendRequest(
+            $version . '/places/' . $lat . ',' . $lon . '.json', $args
+        );
+    }
+
 
     /**
      * Get the density of a given point
