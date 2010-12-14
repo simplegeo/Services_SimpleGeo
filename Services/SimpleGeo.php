@@ -388,7 +388,7 @@ class Services_SimpleGeo
     {
         try {
             $result = $this->_oauth->sendRequest(
-                $this->_getURL($endpoint), $args, $method
+                $this->_getURL($endpoint, $version), $args, $method
             );
         } catch (HTTP_OAuth_Exception $e) {
             throw new Services_SimpleGeo_Exception($e->getMessage(),
