@@ -193,7 +193,6 @@ class Services_SimpleGeo
         $endpoint = '/records/' . $rec->layer . '/' . $rec->id . '.json';
         $version = '0.1';
         $url = $this->_getURL($endpoint, $version);
-        print $url;
 
         $result = $this->_sendRequestWithBody($url, (string)$rec);
         return ($result->getStatus() === 202);
