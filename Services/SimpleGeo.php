@@ -278,7 +278,7 @@ class Services_SimpleGeo
      *
      * @return mixed
      */
-    public function getPlaces($lat, $lon)
+    public function getPlaces($lat, $lon, array $args = array())
     {
         $version = '1.0';
         return $this->_sendRequest(
