@@ -195,8 +195,8 @@ class Services_SimpleGeo
         $url = $this->_getURL($endpoint, $version);
         print $url;
 
-//        $result = $this->_sendRequestWithBody($url, (string)$rec);
-//        return ($result->getStatus() === 202);
+        $result = $this->_sendRequestWithBody($url, (string)$rec);
+        return ($result->getStatus() === 202);
     }
 
     /**
