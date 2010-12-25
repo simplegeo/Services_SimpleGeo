@@ -255,7 +255,7 @@ class Services_SimpleGeo
     }
 
     /**
-     * Do a SimpleGeo Context query
+     * Do a SimpleGeo Context query with a coordinate
      *
      * @param float $lat Latitude
      * @param float $lon Longitude
@@ -267,6 +267,21 @@ class Services_SimpleGeo
         $version = '1.0';
         return $this->_sendRequest(
             $version . '/context/' . $lat . ',' . $lon . '.json'
+        );
+    }
+
+    /**
+     * Do a SimpleGeo Context query with an address
+     *
+     * @param string $address Human-readable address
+     *
+     * @return mixed
+     */
+    public function getContextFromAddress($address)
+    {
+        $version = '1.0';
+        return $this->_sendRequest(
+            $version . '/context/address.json?address=' . $address
         );
     }
 
