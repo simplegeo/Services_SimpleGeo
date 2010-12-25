@@ -286,6 +286,23 @@ class Services_SimpleGeo
     }
 
     /**
+     * Do a SimpleGeo Context query with an IP.
+     * If you don't pass anything, it uses the IP
+     * from the user's internet connection.
+     *
+     * @param string $ip IP address
+     *
+     * @return mixed
+     */
+    public function getContextFromIPAddress($ip='ip')
+    {
+        $version = '1.0';
+        return $this->_sendRequest(
+            $version . '/context/' . $ip . '.json'
+        );
+    }
+
+    /**
      * Do a nearby search for SimpleGeo Places
      *
      * @param float $lat Latitude
