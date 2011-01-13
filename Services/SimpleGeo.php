@@ -459,7 +459,7 @@ class Services_SimpleGeo
     {
         try {
             $result = $this->_oauth->sendRequest(
-                $this->_getURL($endpoint, $version), $args, $method
+                $this->_getURL($endpoint), $args, $method
             );
         } catch (HTTP_OAuth_Exception $e) {
             throw new Services_SimpleGeo_Exception($e->getMessage(),
@@ -483,9 +483,9 @@ class Services_SimpleGeo
      * @return string
      * @see Services_SimpleGeo::$_api, Services_SimpleGeo::$_version
      */
-    private function _getURL($endpoint, $version)
+    private function _getURL($endpoint)
     {
-        return $this->_api . '/' . $version . $endpoint;
+        return $this->_api . '/' . $endpoint;
     }
 }
 
