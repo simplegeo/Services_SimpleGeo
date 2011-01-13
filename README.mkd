@@ -8,19 +8,27 @@ Considering one of our cofounders was an active PEAR contributor, worked for Dig
 * [HTTP_OAuth 0.1.7+](http://pear.php.net/package/HTTP_OAuth)
 * [Net_URL2 0.2.0+](http://pear.php.net/package/Net_URL2)
 
-# Installation
+## Installation
 
-The code Joe wrote is a PEAR package, but isn't available via the normal PEAR installation process. We currently don't have any plans to build a non-PEAR package, but one could be quickly built with the [PHP OAuth client library](http://php.net/oauth). This describes how to install the package locally if you have access to installing packages via the `pear` command line utility:
+This is a PEAR package, but isn't available via the normal PEAR installation
+process. We currently don't have any plans to build a non-PEAR package, but one
+could be quickly built with the [PHP OAuth client
+library](http://php.net/oauth). This describes how to install the package
+locally if you have access to installing packages via the `pear` command line
+utility:
 
-1. Install the requirements.
-    * `pear install HTTP_Request2` 
-    * `pear install HTTP_OAuth`
-    * `pear install Net_URL2`
-1. Check out the GitHub repository.
-    * `git clone git://github.com/simplegeo/Services_SimpleGeo.git`
-    * `cd Services_SimpleGeo`
-    * `pear package`
-    * `sudo pear install Services_SimpleGeo-x.y.z.tgz` (Replace `x.y.z` with whatever version you've checked out).
+1. Install the requirements:
+
+    $ sudo pear install HTTP_OAuth-alpha
+
+_(HTTP\_OAuth is only available from the `alpha` channel.)_
+
+2. Check out the GitHub repository.
+
+    $ git clone git://github.com/simplegeo/Services_SimpleGeo.git
+    $ cd Services_SimpleGeo
+    $ pear package
+    $ sudo pear install Services_SimpleGeo-x.y.z.tgz # (Replace `x.y.z` with whatever version you've checked out).
 
 ## PEAR and Your `include_path`
 
