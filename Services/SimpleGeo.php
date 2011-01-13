@@ -292,6 +292,8 @@ class Services_SimpleGeo
      *
      * @param float $lat Latitude
      * @param float $lon Longitude
+     * @param array $args Arguments (e.g. 'q' => 'Search Query', 'category' =>
+     * 'Search Category', 'radius' => 'Search Radius (km)')
      *
      * @return mixed
      */
@@ -300,6 +302,48 @@ class Services_SimpleGeo
         $version = '1.0';
         return $this->_sendRequest(
             $version . '/places/' . $lat . ',' . $lon . '.json', $args
+        );
+    }
+
+    /**
+     * Do a nearby search for SimpleGeo Places
+     *
+     * @param string $address Address
+     * @param array $args Arguments (e.g. 'q' => 'Search Query', 'category' =>
+     * 'Search Category', 'radius' => 'Search Radius (km)')
+     *
+     * @return mixed
+     */
+    public function getPlacesNearAddress($address, array $args = array())
+    {
+        $args['address'] = $address;
+
+        $version = '1.0';
+        return $this->_sendRequest(
+            $version . '/places/address.json', $args
+        );
+    }
+
+    /**
+     * Do a nearby search for SimpleGeo Places
+     *
+     * @param string $ip IP Address
+     * @param array $args Arguments (e.g. 'q' => 'Search Query', 'category' =>
+     * 'Search Category', 'radius' => 'Search Radius (km)')
+     *
+     * @return mixed
+     */
+    public function getPlacesNearIPAddress($ip, array $args = array())
+    {
+        // if $ip was null, use the magic string "ip" which causes SimpleGeo to
+        // use the IP address of the requester
+        if (!$ip) {
+            $ip = 'ip';
+        }
+
+        $version = '1.0';
+        return $this->_sendRequest(
+            $version . '/places/' . $ip . '.json', $args
         );
     }
 
@@ -317,7 +361,6 @@ class Services_SimpleGeo
             $version . '/features/' . $handle . '.json'
         );
     }
-
 
     /**
      * Get the density of a given point
