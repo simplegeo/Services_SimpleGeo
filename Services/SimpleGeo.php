@@ -465,7 +465,7 @@ class Services_SimpleGeo
      * @param string $endpoint The relative path for the endpoint
      *
      * @return string
-     * @see Services_SimpleGeo::$_api, Services_SimpleGeo::$_version
+     * @see Services_SimpleGeo::$_api
      */
     private function _getURL($endpoint)
     {
