@@ -272,8 +272,8 @@ class Services_SimpleGeo
 
     /**
      * Do a SimpleGeo Context query with an IP.
-     * If you don't pass anything, it uses the IP
-     * from the user's internet connection.
+     * If you don't pass anything, it uses the requesting IP (which will be
+     * your server).
      *
      * @param string $ip IP address
      *
