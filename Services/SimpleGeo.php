@@ -288,6 +288,64 @@ class Services_SimpleGeo
     }
 
     /**
+     * Add a place
+     *
+     * @param array   $feature Nested array representation of a GeoJSON Feature.
+     * @param boolean $private Whether this feature should be private (not
+     *                         submitted for inclusion); defaults to false.
+     *
+     * @return array Hash containing the generated handle ("handle") and
+     *               a status token ("token").
+     */
+    public function addPlace(array $feature, $private = false)
+    {
+        $version = '1.0';
+        $result = $this->_sendRequestWithBody(
+            $version . '/places', json_encode($feature), 'POST'
+        );
+
+        return @json_decode($result->getBody());
+    }
+
+    /**
+     * Delete a place
+     *
+     * @param string $handle Feature handle.
+     *
+     * @return boolean Returns true on success
+     */
+    public function deletePlace($handle) {
+        $version = '1.0';
+        $result = $this->_sendRequest(
+            $version . '/features/' . $handle . '.json', array(), 'DELETE'
+        );
+
+        return ($result === null);
+    }
+
+    /**
+     * Edit a place
+     *
+     * @param array   $feature Nested array representation of a partial GeoJSON
+     *                         Feature with just the fields present that you
+     *                         wish to change.
+     * @param boolean $private Whether these changes should be private (not
+     *                         submitted for inclusion); defaults to false.
+     *
+     * @return array Hash containing the generated handle ("handle") and
+     *               a status token ("token").
+     */
+    public function editPlace($handle, array $feature, $private = false)
+    {
+        $version = '1.0';
+        $result = $this->_sendRequestWithBody(
+            $version . '/places/' . $handle . '.json', json_encode($feature), 'POST'
+        );
+
+        return @json_decode($result->getBody());
+    }
+
+    /**
      * Do a nearby search for SimpleGeo Places
      *
      * @param float $lat Latitude
