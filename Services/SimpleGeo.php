@@ -176,8 +176,8 @@ class Services_SimpleGeo
     public function addRecord(Services_SimpleGeo_Record $rec)
     {
         $version = '0.1';
-        $endpoint = '/records/' . $rec->layer . '/' . $rec->id . '.json';
-        $url = $this->_getURL($endpoint, $version);
+        $endpoint = $version . '/records/' . $rec->layer . '/' . $rec->id . '.json';
+        $url = $this->_getURL($endpoint);
 
         $result = $this->_sendRequestWithBody($url, (string)$rec);
         return ($result->getStatus() === 202);
@@ -229,10 +229,10 @@ class Services_SimpleGeo
         }
 
         $version = '0.1';
-        $endpoint = '/records/' . $layer . '.json';
+        $endpoint = $version . '/records/' . $layer . '.json';
 
         $result = $this->_sendRequestWithBody(
-            $this->_getURL($endpoint, $version), 
+            $this->_getURL($endpoint),
             json_encode($body), "POST"
         );
 
