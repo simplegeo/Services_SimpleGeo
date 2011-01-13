@@ -100,22 +100,6 @@ class Services_SimpleGeo
     }
 
     /**
-     * Reverse geocode a lat/lon to an address
-     *
-     * @param float $lat Latitude
-     * @param float $lon Longitude
-     *
-     * @return mixed
-     */
-    public function getAddress($lat, $lon)
-    {
-        $version = '0.1';
-        return $this->_sendRequest(
-            $version . '/nearby/address/' . $lat . ',' . $lon . '.json'
-        );
-    }
-
-    /**
      * Fetch a single record
      *
      * @param string $layer The layer the record belongs to
