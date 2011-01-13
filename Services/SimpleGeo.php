@@ -53,11 +53,11 @@ class Services_SimpleGeo
         'sat', 'sun');
 
     /**
-     * Version of the API to use
+     * API URL.
      *
-     * @var string $_version The version of the API to use
+     * @var string $_api The API URL to use
      */
-    private $_api = 'http://api.simplegeo.com';
+    private $_api;
 
     /**
      * OAuth client
@@ -84,18 +84,19 @@ class Services_SimpleGeo
     /**
      * Constructor
      *
-     * @param string $token   Your OAuth token
-     * @param string $secret  Your OAuth secret
-     * @param string $version Which version to use
+     * @param string $token  Your OAuth token
+     * @param string $secret Your OAuth secret
+     * @param string $url    API URL (optional).
      *
      * @return void
      * @see HTTP_OAuth_Consumer
      */
-    public function __construct($token, $secret)
+    public function __construct($token, $secret, $url = 'http://api.simplegeo.com')
     {
-        $this->_oauth   = new HTTP_OAuth_Consumer($token, $secret);
-        $this->_token   = $token;
-        $this->_secret  = $secret;
+        $this->_oauth  = new HTTP_OAuth_Consumer($token, $secret);
+        $this->_token  = $token;
+        $this->_secret = $secret;
+        $this->_api    = $url;
     }
 
     /**
