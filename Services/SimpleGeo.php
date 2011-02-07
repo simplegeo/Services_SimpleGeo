@@ -266,7 +266,7 @@ class Services_SimpleGeo
     {
         $version = '1.0';
         return $this->_sendRequest(
-            $version . '/context/address.json?address=' . $address
+            $version . '/context/address.json', array("address" => $address)
         );
     }
 
