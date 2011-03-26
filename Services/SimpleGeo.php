@@ -192,6 +192,21 @@ class Services_SimpleGeo
     }
 
     /**
+     * Create or update a layer
+     *
+     * @return string
+     */
+    public function updateLayer($layer, $title = 'Example title', $desc = 'Example description', $public = 'false')
+    {
+        $version = '0.1';
+        $endpoint = $version . '/layers/' . $layer . '.json';
+        $url = $this->_getURL($endpoint);
+        $args = array("title" => $title, "description" => $desc, "public" => $public);
+        $result = $this->_sendRequestWithBody($url, json_encode($args));
+        return @json_decode($result->getBody());
+    }
+
+    /**
      * Add a record to a layer
      *
      * @param object $rec An instance of {@link Services_SimpleGeo_Record}
