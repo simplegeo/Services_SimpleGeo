@@ -207,6 +207,20 @@ class Services_SimpleGeo
     }
 
     /**
+     * Delete a layer
+     *
+     * @return string
+     */
+    public function deleteLayer($layer)
+    {
+        $version = '0.1';
+        $result = $this->_sendRequest(
+            $version . '/layers/' . $layer . '.json', array(), 'DELETE'
+        );
+        return ($result === null);
+    }
+
+    /**
      * Add a record to a layer
      *
      * @param object $rec An instance of {@link Services_SimpleGeo_Record}
