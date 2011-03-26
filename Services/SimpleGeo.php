@@ -179,6 +179,19 @@ class Services_SimpleGeo
     }
 
     /**
+     * Get details about a layer
+     *
+     * @return string
+     */
+    public function getLayerDetails($layer)
+    {
+        $version = '0.1';
+        return $this->_sendRequest(
+            $version . '/layers/' . $layer . '.json'
+        );
+    }
+
+    /**
      * Add a record to a layer
      *
      * @param object $rec An instance of {@link Services_SimpleGeo_Record}
