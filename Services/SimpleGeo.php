@@ -44,15 +44,6 @@ require_once 'Services/SimpleGeo/Record.php';
 class Services_SimpleGeo
 {
     /**
-     * Valid days of the week
-     *
-     * @var array $_days Valid days
-     * @see Services_SimpleGeo::getDensity()
-     */
-    static private $_days = array('mon', 'wed', 'tue', 'thu', 'fri', 
-        'sat', 'sun');
-
-    /**
      * API URL.
      *
      * @var string $_api The API URL to use
@@ -473,49 +464,6 @@ class Services_SimpleGeo
         return $this->_sendRequest(
             $version . '/features/' . $handle . '.json'
         );
-    }
-
-    /**
-     * Get the density of a given point
-     *
-     * If you do not provide a $day then the current day will be
-     * used. You must provide an hour if you wish to query a 
-     * specific day/hour combination.
-     *
-     * @param float  $lat  The latitude of the point
-     * @param float  $lon  The longitude of the point
-     * @param string $day  The day of the week (defaults to today)
-     * @param string $hour The hour of the day (0 - 23)
-     *
-     * @throws {@link Services_SimpleGeo_Exception} on API error
-     * @return array
-     */
-    public function getDensity($lat, $lon, $day = null, $hour = null)
-    {
-        if ($day === null) {
-            $day = strtolower(date("D"));
-        } elseif (!in_array($day, self::$_days)) {
-            throw new Services_SimpleGeo_Exception(
-                $day . ' is not a valid day of the week (e.g. mon).'
-            );
-        }
-        
-        $version = '0.1';
-
-        if ($hour === null) {
-            $endpoint = $version . '/density/' . $day . '/' . $lat . ',' . $lon . '.json';
-        } else {
-            if ($hour < 0 || $hour > 23) {
-                throw new Services_SimpleGeo_Exception(
-                    'Hour must be between 0 and 23.'
-                );
-            }
-
-            $endpoint = $version . '/density/' . $day . '/' . $hour . '/' . $lat . ',' .
-                $lon . '.json';
-        }
-
-        return $this->_sendRequest($endpoint);
     }
 
     /**
