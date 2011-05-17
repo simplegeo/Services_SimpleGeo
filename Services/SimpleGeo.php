@@ -184,6 +184,31 @@ class Services_SimpleGeo
     }
 
     /**
+     * Add a record to a layer with a human-readable address
+     *
+     * @param string $address A US address, with a zipcode
+     * @param object $rec An instance of {@link Services_SimpleGeo_Record}
+     *
+     * @see Services_SimpleGeo_Record
+     * @return boolean
+     */
+    public function addRecordWithAddress($address, Services_SimpleGeo_Record $rec)
+    {
+        $context_response = $this->_sendRequest(
+            '1.0/context/address.json', array("address" => $address)
+        );
+        $rec->lat = $context_response->query->latitude;
+        $rec->lon = $context_response->query->longitude;
+        // *TODO* Add error message if lat/lon doesn't exist.
+        $version = '0.1';
+        $endpoint = $version . '/records/' . $rec->layer . '/' . $rec->id . '.json';
+        $url = $this->_getURL($endpoint);
+
+        $result = $this->_sendRequestWithBody($url, (string)$rec);
+        return ($result->getStatus() === 202);
+    }
+
+    /**
      * Delete a record from the API
      *
      * @param string $layer The layer the record belongs to
