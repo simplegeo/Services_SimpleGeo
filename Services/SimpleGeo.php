@@ -297,7 +297,7 @@ class Services_SimpleGeo
     {
         $version = '1.0';
         return $this->_sendRequest(
-            $version . '/context/' . $lat . ',' . $lon . '.json'
+            $version . '/context/' . $lat . ',' . $lon . '.json', $args
         );
     }
 
@@ -329,7 +329,7 @@ class Services_SimpleGeo
     {
         $version = '1.0';
         return $this->_sendRequest(
-            $version . '/context/' . $ip . '.json', $args
+            $version . '/context/' . $ip . '.json'
         );
     }
 
