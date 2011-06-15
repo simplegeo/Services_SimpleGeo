@@ -293,7 +293,7 @@ class Services_SimpleGeo
      *
      * @return mixed
      */
-    public function getContext($lat, $lon)
+    public function getContext($lat, $lon, array $args = array())
     {
         $version = '1.0';
         return $this->_sendRequest(
@@ -329,7 +329,7 @@ class Services_SimpleGeo
     {
         $version = '1.0';
         return $this->_sendRequest(
-            $version . '/context/' . $ip . '.json'
+            $version . '/context/' . $ip . '.json', $args
         );
     }
 
