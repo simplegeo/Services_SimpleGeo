@@ -308,11 +308,12 @@ class Services_SimpleGeo
      *
      * @return mixed
      */
-    public function getContextFromAddress($address)
+    public function getContextFromAddress($address, array $args = array())
     {
         $version = '1.0';
+        $args['address'] = $address;
         return $this->_sendRequest(
-            $version . '/context/address.json', array("address" => $address)
+            $version . '/context/address.json', $args
         );
     }
 
@@ -325,7 +326,7 @@ class Services_SimpleGeo
      *
      * @return mixed
      */
-    public function getContextFromIPAddress($ip='ip')
+    public function getContextFromIPAddress($ip='ip', array $args = array())
     {
         $version = '1.0';
         return $this->_sendRequest(
